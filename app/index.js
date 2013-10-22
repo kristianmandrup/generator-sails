@@ -2,7 +2,9 @@
 'use strict';
 var util = require('util');
 var path = require('path');
-var spawn = require('child_process').spawn;
+var rimraf = require('rimraf');
+var child_process = require('child_process');
+var spawn = child_process.spawn;
 var yeoman = require('yeoman-generator');
 // var colors = require('colors');
 
@@ -35,6 +37,11 @@ var SailsGenerator = module.exports = function SailsGenerator(args, options, con
 
 util.inherits(SailsGenerator, yeoman.generators.Base);
 
+SailsGenerator.prototype.removeClientDir = function removeDir () {
+    console.log('removing /client folder')
+    rimraf.sync('client');
+};
+
 SailsGenerator.prototype.askFor = function askFor() {
   var cb = this.async();
 
@@ -49,14 +56,28 @@ SailsGenerator.prototype.askFor = function askFor() {
   }, {
       name: 'includeRequireJS',
       message: 'Would you like to include RequireJS (for AMD support)?'
-  }];
+  }, {
+      name: 'serverTemplateLang',
+      message: 'Which server language',
+      default: 'jade',
+      type: 'list',
+      choices: ['jade', 'ejs']
+  }, {
+      name: 'waterlineAdapters',
+      message: 'Which waterline data store adapters',
+      default: ['mongo', 'disk'],
+      type: 'checkbox',
+      choices: ['mongo', 'mysql', 'disk', 'memory']
+  }
+  ];
 
   this.prompt(prompts, function (props) {
       // `props` is an object passed in containing the response values, named in
       // accordance with the `name` property from your prompt object. So, for us:
       this.compassBootstrap = props.compassBootstrap;
       this.includeRequireJS = props.includeRequireJS;
-
+      this.serverTemplateLang = props.serverTemplateLang;
+      this.waterlineAdapters = props.waterlineAdapters;
       cb();
   }.bind(this));
 };
@@ -177,5 +198,35 @@ SailsGenerator.prototype.app = function app() {
     this.write('app/index.html', this.indexFile);
     this.write('app/scripts/main.js', this.mainJsFile);
     this.write('app/scripts/hello.coffee', this.mainCoffeeFile);
-    this.directory('./sails', './');
 };
+
+SailsGenerator.prototype.sailsApp = function sailsApp() {
+    var command, child;
+    command = 'sails new client';
+    command += ' --template=' + this.serverTemplateLang;
+
+    console.log(command);
+
+    this.client
+
+    child = child_process.exec(command, function (error, stdout, stderr) {
+      if (error) {
+         console.log(error.stack);
+         console.log('Error code: '+error.code);
+         console.log('Signal received: '+error.signal);
+      }
+      if (stdout) {
+        console.log('Sails app created successfully! Ready to Sails :)');
+      }
+      // console.log('Child Process STDOUT: '+stdout);
+      // console.log('Child Process STDERR: '+stderr);
+    });
+
+    child.on('exit', function (code) {
+      console.log('Child process exited with exit code '+code);
+    });
+};
+
+SailsGenerator.prototype.adapters = function adapters() {
+  console.log('setup adapters:' + this.waterlineAdapters);
+}
