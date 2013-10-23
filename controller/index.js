@@ -4,6 +4,8 @@ var rimraf = require('rimraf');
 var child_process = require('child_process');
 var spawn = child_process.spawn;
 var yeoman = require('yeoman-generator');
+var fs = require('fs');
+var _s = require('underscore.string');
 
 var ControllerGenerator = module.exports = function ControllerGenerator(args, options, config) {
   yeoman.generators.NamedBase.apply(this, arguments);
@@ -31,6 +33,24 @@ ControllerGenerator.prototype.askFor = function askFor() {
       cb();
   }.bind(this));
 };
+
+ControllerGenerator.prototype.removeFile = function removeDir () {
+  var file = './api/controllers/' + _s.classify(this.name) + 'Controller.js';
+  // console.log('removing model: ' + file);
+  var self = this;
+
+  var deleteExistingModel = function() {
+    fs.unlink(file, function (err) {
+      if (err) console.log(err);
+      console.log('Deleted old controller: ' + self.name);
+    });    
+  };
+
+  fs.exists(file, function (exists) {
+    deleteExistingModel();
+  });
+};
+
 
 ControllerGenerator.prototype.files = function files() {
   var command, child;

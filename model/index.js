@@ -45,7 +45,7 @@ ModelGenerator.prototype.removeFile = function removeDir () {
   var deleteExistingModel = function() {
     fs.unlink(file, function (err) {
       if (err) console.log(err);
-      console.log('Deleted old model: ' + this.name);
+      console.log('Deleted old model: ' + self.name);
     });    
   };
 
