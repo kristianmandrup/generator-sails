@@ -25,7 +25,8 @@
   "dependencies": {
     "yeoman-generator": "~0.13.4",
     "cheerio": "~0.12.3",
-    "rimraf": "latest"
+    "rimraf": "latest",
+    "underscore.string": "latest"
   },
   "peerDependencies": {
     "generator-mocha": "~0.1.1"

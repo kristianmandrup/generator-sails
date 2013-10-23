@@ -11,9 +11,34 @@ var ControllerGenerator = module.exports = function ControllerGenerator(args, op
 
 util.inherits(ControllerGenerator, yeoman.generators.NamedBase);
 
+ControllerGenerator.prototype.askFor = function askFor() {
+  var cb = this.async();
+
+  var prompts = [{
+      name: 'ctrlActions',
+      message: 'Which actions do you want',
+      default: ['create', 'update'],
+      type: 'checkbox',
+      choices: ['comment', 'create', 'read', 'update', 'destroy', 'tag', 'like']
+  }];
+
+  this.prompt(prompts, function (props) {
+      // `props` is an object passed in containing the response values, named in
+      // accordance with the `name` property from your prompt object. So, for us:
+      this.ctrlActions = props.ctrlActions;
+      console.log('prompt actions', this.ctrlActions);
+
+      cb();
+  }.bind(this));
+};
+
 ControllerGenerator.prototype.files = function files() {
   var command, child;
-  command = 'sails generate controller ' + this.name;
+
+  console.log('actions', this.ctrlActions);
+
+  command = 'sails generate controller ' + this.name; + ' ' + this.ctrlActions.join(' ');
+
 
   console.log(command);
 
