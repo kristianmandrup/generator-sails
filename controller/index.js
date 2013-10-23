@@ -22,6 +22,7 @@ ControllerGenerator.prototype.files = function files() {
     }
     if (stdout) {
       console.log('Sails controller ' + this.name + ' created successfully :)');
+      console.log('Note: The only thing better than thin controllers is no controllers.');
     }
   });
 
