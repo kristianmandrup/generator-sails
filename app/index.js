@@ -228,5 +228,6 @@ SailsGenerator.prototype.sailsApp = function sailsApp() {
 };
 
 SailsGenerator.prototype.adapters = function adapters() {
-  console.log('setup adapters:' + this.waterlineAdapters);
+    this.directory('sails/config/adapters', 'client/config/adapters');
+    this.copy('sails/config/adapters.js', 'client/config/adapters.js');
 }
