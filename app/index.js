@@ -58,7 +58,7 @@ SailsGenerator.prototype.askFor = function askFor() {
       message: 'Would you like to include RequireJS (for AMD support)?'
   }, {
       name: 'serverTemplateLang',
-      message: 'Which server language',
+      message: 'Which server template language',
       default: 'jade',
       type: 'list',
       choices: ['jade', 'ejs']
@@ -202,7 +202,9 @@ SailsGenerator.prototype.app = function app() {
 
 SailsGenerator.prototype.sailsApp = function sailsApp() {
     var command, child;
-    command = 'sails new client';
+
+    // using linker for asset management!!!
+    command = 'sails new client --linker';
     command += ' --template=' + this.serverTemplateLang;
 
     console.log(command);

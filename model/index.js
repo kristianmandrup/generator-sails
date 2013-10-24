@@ -54,7 +54,6 @@ ModelGenerator.prototype.removeFile = function removeDir () {
   });
 };
 
-
 ModelGenerator.prototype.files = function files() {
   var command, child;
 
